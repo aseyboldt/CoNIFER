@@ -15,7 +15,7 @@ import pandas as pd
 def process_sample_list(args):
     if os.path.isdir(args.samples):
         # got a directory of samples, hopefully RPKM files
-        print "Not yet supported!"
+        print("Not yet supported!")
         sys.exit(1)
     else:
         try:
@@ -47,7 +47,7 @@ def load_probes(probes, minsize=None):
                         "Check file exists, is tab-delimited and has appropriate header?"
                         "Required fields: chromosome,start,stop,name,isSegDup,isPPG,strand")
         sys.exit(1)
-    probes["chromosome"] = map(convert_chrom, probes.chromosome)
+    probes["chromosome"] = list(map(convert_chrom, probes.chromosome))
     if probes["chromosome"].dtype != np.int64:
         log.exception("Could not convert all probes to standard chromosome notation!")
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--components_removed", "-C", type=int, required=True)
     parser.add_argument("--samples", required=True)
     parser.add_argument("--probes", required=True)
-    parser.add_argument("--chromosomes",type=int, nargs="*", required=False, default=range(1,25))
+    parser.add_argument("--chromosomes",type=int, nargs="*", required=False, default=list(range(1,25)))
     parser.add_argument("--min-probe-size", default=10, type=int)
     parser.add_argument("--QC_report","--qc", type=str, required=False, default=None)
     parser.add_argument("--log", type=str, required=False, default=None)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     try:
         logging.basicConfig(filename=args.log,level=numeric_log_level,format='[%(levelname)s] [%(asctime)s] %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     except IOError:
-        print "Could not open log file or start logging. Log output will be sent to stderr/stdout"
+        print("Could not open log file or start logging. Log output will be sent to stderr/stdout")
         logging.basicConfig(level=numeric_log_level,format='[%(levelname)s] [%(asctime)s] %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
     log = logging.getLogger("CoNIFER")
@@ -221,7 +221,7 @@ if __name__ == "__main__":
             log.exception("Ran out of memory in SVD transformation!")
             sys.exit(1)
         except np.linalg.linalg.LinAlgError:
-            print rpkm.shape
+            print(rpkm.shape)
             np.save("/net/eichler/vol8/home/nkrumm/zrpkm.tmp.svd", rpkm)
 
         new_S = np.diag(np.hstack([np.zeros([args.components_removed]),S[args.components_removed:]]))

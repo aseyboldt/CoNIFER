@@ -36,7 +36,7 @@ def load_probes(probe_file, minsize=None):
                         "Check file exists, is tab-delimited and has appropriate header?"
                         "Required fields: <chrom>, <start>, <end>, <exon_name>")
 
-    probes["chrom"] = map(convert_chrom, probes.chrom)
+    probes["chrom"] = list(map(convert_chrom, probes.chrom))
     if probes["chrom"].dtype != np.int64:
         raise Exception("Error! Could not convert all probes to standard chromosome notation!")
 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     
     read_t, calc_t, write_t = 0, 0, 0
 
-    for chrom in xrange(1,25):
+    for chrom in range(1,25):
 
         chr_mask = probes.chrom == chrom
         exon_starts = probes[chr_mask]["start"].values
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         # RPKM calculation, very speed, such vectorized!
         a = np.searchsorted(positions, exon_starts + 1)
         b = np.searchsorted(positions, exon_stops + 1)
-        ix = itertools.izip(a,b)
+        ix = zip(a,b)
         read_cnt = np.array([np.sum(counts[j:k]) for j,k in ix])
         exon_bp = exon_stops-exon_starts
         rpkm = (10**9*(read_cnt)/(exon_bp))/(total_reads)
@@ -130,4 +130,4 @@ if __name__ == '__main__':
     
     infile.close()
     outfile.close()
-    print args.sampleID, "read: ", read_t, " calc: ", calc_t, " write: ", write_t, " total: ", time.time()-t1
+    print(args.sampleID, "read: ", read_t, " calc: ", calc_t, " write: ", write_t, " total: ", time.time()-t1)

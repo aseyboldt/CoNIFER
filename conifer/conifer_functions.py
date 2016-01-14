@@ -23,6 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
 #######################################################################
+from __future__ import print_function
 
 import csv
 from tables import *
@@ -154,9 +155,9 @@ def plotGenomicCoords(plt, rpkm_data,fontsize=10,rotation=0):
 	import operator
 	import locale
 	exon_set = rpkm_data.exons
-	genomic_coords = np.array(map(operator.itemgetter("start"),exon_set))
+	genomic_coords = np.array(list(map(operator.itemgetter("start"),exon_set)))
 	
-	ticks = range(0,len(exon_set),len(exon_set)/5)
+	ticks = list(range(0,len(exon_set),len(exon_set)/5))
 	
 	ticks[-1] -= 1 # the last tick is going to be off the chart, so we estimate it as the second to last genomic coord.
 	labels = [locale.format("%d", genomic_coords[i], grouping=True) for i in ticks if i < len(genomic_coords)]
@@ -186,7 +187,7 @@ def mergeCalls(calls):
 		return []
 	
 	out_calls = []
-	calls=np.array(calls)[np.argsort(np.array(map(operator.itemgetter("start"),calls),dtype=np.int))]
+	calls=np.array(calls)[np.argsort(np.array(list(map(operator.itemgetter("start"),calls)),dtype=np.int))]
 	pstart = calls[0]["start"]
 	pstop = calls[0]["stop"]
 	for d in calls:
@@ -211,7 +212,7 @@ class rpkm_data:
 		
 	def smooth(self, window = 15, padded = False): #todo, fix the padding here
 		if self.isGenotype:
-			print "Warning: the data in this rpkm_data container are single genotype values. Smoothing will have no effect!"
+			print("Warning: the data in this rpkm_data container are single genotype values. Smoothing will have no effect!")
 			return self.rpkm
 		
 		if window > 0:
@@ -258,7 +259,7 @@ class rpkm_reader:
 		"""Initialize an rpkm_reader instance. Specify the location of the data file"""
 		
 		if rpkm_fn == None:
-			print "Must specify RPKM HDF5 file!"
+			print("Must specify RPKM HDF5 file!")
 			return 0
 		# set up file access
 		self.h5file = openFile(rpkm_fn, mode='r')
