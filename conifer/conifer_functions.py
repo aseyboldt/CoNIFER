@@ -80,7 +80,7 @@ class sample(IsDescription):
 
 def loadProbeList(CF_probe_filename):
     # Load data files
-    probefile = open(CF_probe_filename, 'rb')
+    probefile = open(CF_probe_filename, 'r')
     s = csv.Sniffer()
     header = s.has_header(probefile.read(1024))
     probefile.seek(0)
