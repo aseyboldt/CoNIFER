@@ -19,9 +19,6 @@ setup(
         'pandas',
         'pysam',
     ],
-    data_files={
-        'probe_files': [os.listdir(path.join(here, 'probe_files'))]
-    },
     entry_points={
         'console_scripts': [
             'conifer=conifer:main',
