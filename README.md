@@ -1,3 +1,5 @@
+This is a fork of CoNIFER that adds a setup file and python3 compatibility.
+
 CoNIFER
 =======
 
